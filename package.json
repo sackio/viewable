@@ -10,7 +10,7 @@
     "express": "*"
   , "errorhandler": "*"
   , "morgan": "*"
-  , "connect": "*"
+  , "optionall": "*"
   }
 , "dependencies": {
     "async": "*"

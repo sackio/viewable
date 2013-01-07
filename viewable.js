@@ -18,8 +18,8 @@ var Async = require('async')
 
     self['views'] = {};
     self['templates'] = {};
-    self['locals'] = a.o.locals;
-    self['js_locals'] = a.o.js_locals;
+    self['locals'] = o.locals;
+    self['js_locals'] = o.js_locals;
 
     self['loadView'] = function(path, watch){
       var name = path.split(Path.delimeter).pop();
