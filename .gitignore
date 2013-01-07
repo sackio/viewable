@@ -1,0 +1,12 @@
+.DS_Store
+._.DS_Store
+node_modules
+bower_components
+*.log
+credentials.json
+config.json
+data
+tmp
+log/
+target/
+._*

@@ -1,0 +1,109 @@
+var Async = require('async')
+  , _ = require('underscore')
+  , Belt = require('jsbelt')
+  , Path = require('path')
+  , FS = require('fs');
+
+(function(){
+
+  var Viewable = function(o){
+    o = _.defaults(o || {}, {
+      //paths
+      'watch': true
+    , 'locals': {}
+    , 'js_locals': []
+    });
+
+    var self = this;
+
+    self['views'] = {};
+    self['templates'] = {};
+    self['locals'] = a.o.locals;
+    self['js_locals'] = a.o.js_locals;
+
+    self['loadView'] = function(path, watch){
+      var name = path.split(Path.delimeter).pop();
+      self.views[name] = FS.readFileSync(path).toString('utf8');
+      self.template[name] = _.template(self.views.name);
+
+      if (watch) FS.watch(path, {
+        'persistent': false
+      }, function(event, file){
+        var n = file.split(Path.delimeter).pop();
+        self.loadView(file, self.views[n] ? false : watch);
+      });
+    };
+
+    self['render'] = function(view, locals){
+      var data = _.extend({}, {
+        'Locals': _.extend({}, locals, self.locals)
+      , 'Render': function(v, locs){
+          locs = locs || data.Locals;
+          locs['Render'] = locs.Render || data.Render;
+          _.each(self.locations, function(v, k){
+            locs[k] = locs[k] || data.Locals[k];
+          });
+          locs['Locals'] = locs;
+
+          return self.views[v](locs);
+        }
+      }, locals);
+
+      return self.templates[view](data);
+    };
+
+    self['renderViewsJs'] = function(){
+      var js = 'var Render = function(view, locals){\n'
+             + '  locals = locals || window;\n';
+
+      js += _.map(self.js_locals, function(l){
+        return '  locals["' + l + '"] = locals[" + l + "] || l;';
+      }).join('\n');
+
+      js += '  locals.Render = locals.Render || Render;\n';
+
+      js += '\n  return Partials[view](locals);\n';
+          + '};\n'
+          + '\n'
+          + 'var Partials = {\n'
+
+      var count = 0;
+      js += _.map(self.views, function(v, k){
+        return (count++ ? ',' : ' ') + ' "' + k + '": _.template(' + Belt.stringify(v.split(/\n+|\r+/)) + '.join("\\n"))\n';
+      }).join('\n');
+
+      js += '};';
+
+      return js;
+    };
+
+    _.each(o.paths, function(p){
+      var stat = FS.statSync(p)
+        , paths = [];
+
+      if (stat.isDirectory()){
+        if (o.watch) FS.watch(p, {
+          'persistent': false
+        }, function(event, file){
+          var n = file.split(Path.delimeter).pop();
+          self.loadView(file, self.views[n] ? false : o.watch);
+        });
+
+        _.each(FS.readdirSync(p), function(p2){
+          paths.push(Path.join(p, '/' + p2));
+        });
+      } else {
+        paths.push(p);
+      }
+
+      _.each(paths, function(p2){
+        self.loadView(p2, o.watch);
+      });
+    });
+
+    return self;
+  };
+
+  module.exports = Viewable;
+
+}.call());
