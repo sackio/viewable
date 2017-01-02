@@ -22,14 +22,14 @@ var Async = require('async')
     self['js_locals'] = o.js_locals;
 
     self['loadView'] = function(path, watch){
-      var name = path.split(Path.sep).pop();
+      var name = path.split(Path.sep).pop().replace(/\.(html|ejs)$/i, '');
       self.views[name] = FS.readFileSync(path).toString('utf8');
       self.template[name] = _.template(self.views[name]);
 
       if (watch) FS.watch(path, {
         'persistent': false
       }, function(event, file){
-        var n = file.split(Path.sep).pop();
+        var n = file.split(Path.sep).pop().replace(/\.(html|ejs)$/i, '');
         self.loadView(file, self.views[n] ? false : watch);
       });
     };
