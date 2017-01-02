@@ -24,7 +24,7 @@ var Async = require('async')
     self['loadView'] = function(path, watch){
       var name = path.split(Path.sep).pop().replace(/\.(html|ejs)$/i, '');
       self.views[name] = FS.readFileSync(path).toString('utf8');
-      self.template[name] = _.template(self.views[name]);
+      self.templates[name] = _.template(self.views[name]);
 
       if (watch) FS.watch(path, {
         'persistent': false
