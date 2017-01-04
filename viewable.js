@@ -29,7 +29,7 @@ var Async = require('async')
       if (watch) FS.watch(path, {
         'persistent': false
       }, function(event, file){
-        var n = file.split(Path.sep).pop().replace(/\.(html|ejs)$/i, '');
+        var n = path.split(Path.sep).pop().replace(/\.(html|ejs)$/i, '');
         self.loadView(file, self.views[n] ? false : watch);
       });
     };
