@@ -86,7 +86,7 @@ var Async = require('async')
           'persistent': false
         }, function(event, file){
           var n = file.split(Path.sep).pop();
-          self.loadView(Path.join(p, Path.sep + file)), self.views[n] ? false : o.watch);
+          self.loadView(Path.join(p, Path.sep + file), self.views[n] ? false : o.watch);
         });
 
         _.each(FS.readdirSync(p), function(p2){
