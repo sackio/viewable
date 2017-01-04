@@ -30,7 +30,7 @@ var Async = require('async')
         'persistent': false
       }, function(event, file){
         var n = path.split(Path.sep).pop().replace(/\.(html|ejs)$/i, '');
-        self.loadView(file, self.views[n] ? false : watch);
+        self.loadView(path, self.views[n] ? false : watch);
       });
     };
 
