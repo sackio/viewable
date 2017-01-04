@@ -45,7 +45,7 @@ var Async = require('async')
           });
           locs['Locals'] = locs;
 
-          return self.views[v](locs);
+          return self.templates[v](locs);
         }
       }, locals);
 
