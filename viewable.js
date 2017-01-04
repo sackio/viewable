@@ -62,7 +62,7 @@ var Async = require('async')
 
       js += '  locals.Render = locals.Render || Render;\n';
 
-      js += '\n  return Partials[view](locals);\n';
+      js += '\n  return Partials[view](locals);\n'
           + '};\n'
           + '\n'
           + 'var Partials = {\n'
