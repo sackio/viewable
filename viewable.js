@@ -78,8 +78,12 @@ var Async = require('async')
     };
 
     _.each(o.paths, function(p){
-      var stat = FS.statSync(p)
-        , paths = [];
+      try {
+        var stat = FS.statSync(p)
+          , paths = [];
+      } catch(e) {
+        return;
+      }
 
       if (stat.isDirectory()){
         if (o.watch) FS.watch(p, {
