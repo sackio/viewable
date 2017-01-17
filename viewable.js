@@ -89,9 +89,13 @@ var Async = require('async')
           self.loadView(Path.join(p, Path.sep + file), self.views[n] ? false : o.watch);
         });
 
-        _.each(FS.readdirSync(p), function(p2){
-          paths.push(Path.join(p, '/' + p2));
-        });
+        _.chain(FS.readdirSync(p))
+         .reject(function(p2){
+           return FS.statSync(Path.join(p, '/' + p2)).isDirectory();
+         })
+         .each(function(p2){
+            paths.push(Path.join(p, '/' + p2));
+          });
       } else {
         paths.push(p);
       }
