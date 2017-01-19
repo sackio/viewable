@@ -65,9 +65,19 @@ var Async = require('async')
       js += '\n  return Templates[view](locals);\n'
           + '};\n'
           + '\n'
-          + 'var Templates = {\n'
+          + 'var Views = {\n';
 
       var count = 0;
+      js += _.map(self.views, function(v, k){
+        return (count++ ? ',' : ' ') + ' "' + k + '": (' + Belt.stringify(v.split(/\n+|\r+/)) + '.join("\\n"))\n';
+      }).join('\n');
+
+      js += '};';
+
+      js += '\n'
+          + 'var Templates = {\n';
+
+      count = 0;
       js += _.map(self.views, function(v, k){
         return (count++ ? ',' : ' ') + ' "' + k + '": _.template(' + Belt.stringify(v.split(/\n+|\r+/)) + '.join("\\n"))\n';
       }).join('\n');

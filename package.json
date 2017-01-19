@@ -1,6 +1,6 @@
 {
   "name": "viewable",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "viewable",
   "engines": {
     "node": ">= 0.8.0"
