@@ -36,18 +36,18 @@ var Async = require('async')
 
     self['render'] = function(view, locals){
       var data = _.extend({}, {
-        'Locals': _.extend({}, locals, self.locals)
+        'Locals': _.extend({}, self.locals || {}, locals || {})
       , 'Render': function(v, locs){
           locs = locs || data.Locals;
           locs['Render'] = locs.Render || data.Render;
           _.each(self.locations, function(v, k){
-            locs[k] = locs[k] || data.Locals[k];
+            locs[k] = !Belt.isNull(locs[k]) ? locs[k] : data.Locals[k];
           });
           locs['Locals'] = locs;
 
           return self.templates[v](locs);
         }
-      }, locals);
+      }, self.locals || {}, locals || {});
 
       return self.templates[view](data);
     };
