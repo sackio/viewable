@@ -57,7 +57,7 @@ var Async = require('async')
              + '  locals = locals || window;\n';
 
       js += _.map(self.js_locals, function(l){
-        return '  locals["' + l + '"] = locals[" + l + "] || l;';
+        return '  locals["' + l + '"] = locals["' + l + '"] || ' + l + ';';
       }).join('\n');
 
       js += '  locals.Render = locals.Render || Render;\n';
