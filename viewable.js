@@ -87,7 +87,7 @@ var Async = require('async')
       js += '});';
 
       js += '\n'
-          + 'var Templates = typeof Templates !== "undefined" ? Templates || {};\n'
+          + 'var Templates = typeof Templates !== "undefined" ? Templates : {};\n'
           + '_.extend(Templates, {\n';
 
       count = 0;
