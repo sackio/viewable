@@ -52,7 +52,18 @@ var Async = require('async')
       return self.templates[view](data);
     };
 
-    self['renderViewsJs'] = function(){
+    self['renderViewsJs'] = function(options, callback){
+      var a = Belt.argulint(arguments)
+        , self = this
+        , gb = {};
+      a.o = _.defaults(a.o, {
+        //views_filter
+      });
+
+      var filtered_views = _.pick(self.views, function(v, k){
+        return a.o.views_filter ? a.o.views_filter(v, k) : true;
+      });
+
       var js = 'var Render = function(view, locals){\n'
              + '  locals = locals || window;\n';
 
@@ -65,24 +76,26 @@ var Async = require('async')
       js += '\n  return Templates[view](locals);\n'
           + '};\n'
           + '\n'
-          + 'var Views = {\n';
+          + 'var Views = typeof Views !== "undefined" ? Views : {};\n'
+          + '_.extend(Views, {\n';
 
       var count = 0;
-      js += _.map(self.views, function(v, k){
-        return (count++ ? ',' : ' ') + ' "' + k + '": (' + Belt.stringify(v.split(/\n+|\r+/)) + '.join("\\n"))\n';
-      }).join('\n');
+      js += _.map(filtered_views, function(v, k){
+              return (count++ ? ',' : ' ') + ' "' + k + '": (' + Belt.stringify(v.split(/\n+|\r+/)) + '.join("\\n"))\n';
+            }).join('\n');
 
-      js += '};';
+      js += '});';
 
       js += '\n'
-          + 'var Templates = {\n';
+          + 'var Templates = typeof Templates !== "undefined" ? Templates || {};\n'
+          + '_.extend(Templates, {\n';
 
       count = 0;
-      js += _.map(self.views, function(v, k){
-        return (count++ ? ',' : ' ') + ' "' + k + '": _.template(' + Belt.stringify(v.split(/\n+|\r+/)) + '.join("\\n"))\n';
-      }).join('\n');
+      js += _.map(filtered_views, function(v, k){
+              return (count++ ? ',' : ' ') + ' "' + k + '": _.template(' + Belt.stringify(v.split(/\n+|\r+/)) + '.join("\\n"))\n';
+            }).join('\n');
 
-      js += '};';
+      js += '});';
 
       return js;
     };
