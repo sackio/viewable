@@ -40,13 +40,14 @@ var Async = require('async')
       , 'Render': function(v, locs){
           locs = locs || data.Locals;
           locs['Render'] = locs.Render || data.Render;
-          _.each(self.locations, function(v, k){
+          _.each(self.locals, function(v, k){
             locs[k] = !Belt.isNull(locs[k]) ? locs[k] : data.Locals[k];
           });
           locs['Locals'] = locs;
 
           return self.templates[v](locs);
         }
+      , 'View': view
       }, self.locals || {}, locals || {});
 
       return self.templates[view](data);
