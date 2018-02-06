@@ -13,8 +13,8 @@
   , "optionall": "*"
   }
 , "dependencies": {
-    "async": "*"
-  , "underscore": "*"
-  , "jsbelt": "*"
+    "async": "2.1.4"
+  , "underscore": "1.8.3"
+  , "jsbelt": "0.8.11"
   }
 }
