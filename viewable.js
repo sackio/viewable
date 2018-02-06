@@ -22,6 +22,8 @@ var Async = require('async')
     self['js_locals'] = o.js_locals;
 
     self['loadView'] = function(path, watch){
+      console.log('Loading view "' + path + '"...');
+
       var name = path.split(Path.sep).pop().replace(/\.(html|ejs)$/i, '');
       self.views[name] = FS.readFileSync(path).toString('utf8');
       self.templates[name] = _.template(self.views[name]);
